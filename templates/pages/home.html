@@ -1,0 +1,39 @@
+{% extends 'base.html' %} {% block headTitle %} Home! {% endblock headTitle %}
+{% block content %}
+<div id="tweets">Loading ...</div>
+
+<script>
+  const url = "/tweets";
+  const tweetsEl = document.getElementById("tweets");
+
+  const handleLike = (tweet_id, currentCount) => {
+    console.log(tweet_id, currentCount);
+  };
+
+  function likeBtn(tweet) {
+    return ` <button class="btn btn-primary" onclick=handleLike(${tweet.id},${tweet.likes})>${tweet.likes} Like</button>`;
+  }
+
+  function formatTweetsEl(tweets) {
+    let finalTweetStr = "";
+
+    tweets.forEach(
+      (item) =>
+        (finalTweetStr += `
+          <div>
+            <h1>${item.id}. ${item.content}</h1>
+           ${likeBtn(item)}
+          </div>
+        `)
+    );
+    tweetsEl.innerHTML = finalTweetStr;
+  }
+
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => {
+      formatTweetsEl(data.response);
+    })
+    .catch((e) => console.log(e));
+</script>
+{% endblock content %}
